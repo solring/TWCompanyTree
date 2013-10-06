@@ -16,7 +16,7 @@ var println = fmt.Println
 var row = regexp.MustCompile("<tr class=.+?>(.*?)</tr>")
 var column = regexp.MustCompile("hideIt2.+?;'>(.*?)</a>")
 
-func basicParse(reader io.Reader){
+func basicParse(reader io.Reader, outputfile string){
 	buf := new(bytes.Buffer)
 	n, err := buf.ReadFrom(reader)
 	if err!=nil{
@@ -26,17 +26,12 @@ func basicParse(reader io.Reader){
 	}
 	println(n, " bytes read from body")
 	s := strings.Replace(buf.String(), "\n", "", -1)
-/*	
-	index := strings.Index(s, "<tbody>")
-	index2 := strings.Index(s, "</tbody>")
-	println("index = ", index, ", index2 = ", index2)
-	substr := s[index+7 :index2]
-*/
+
 	
 	matches := row.FindAllStringSubmatch(s, -1)
 	if matches != nil{
 	
-		fd, err := os.Create("BasicInfo_otc.json")
+		fd, err := os.Create(outputfile)
 		if err !=  nil{
 			println(err)
 			return
@@ -92,7 +87,10 @@ func main(){
 		"step" : {"4"},
 		"checkbtn" : {"1"},
 		"queryName" : {"co_id"},
-		"TYPEK2" : {"otc"},
+		//"TYPEK2" : {"sii"},
+		//"TYPEK2" : {"otc"},
+		//"TYPEK2" : {"rotc"},
+		"TYPEK2" : {"pub"},
 		"code1" : {""},
 		"keyword4" : {""}}
 
@@ -107,7 +105,10 @@ func main(){
 	
 	println(res.Status)
 	//fmt.Print(res.Header)
-	basicParse(res.Body)
+	//basicParse(res.Body, "BasicInfo_sii.json")
+	//basicParse(res.Body, "BasicInfo_otc.json")
+	//basicParse(res.Body, "BasicInfo_rotc.json")
+	basicParse(res.Body, "BasicInfo_pub.json")
 }
 	
 	
