@@ -10,7 +10,7 @@ companys = {}
 def outputResult(outfile):
     ofd = open(outfile, 'w')
     for k, comp in companys.iteritems():
-        ofd.write("%s,\n" % json.dumps(comp, encoding='unicode'))
+        ofd.write("%s,\n" % json.dumps(comp, ensure_ascii=False, encoding='utf-8'))
     ofd.close()
 
 def parseDirectors(target):

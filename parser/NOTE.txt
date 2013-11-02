@@ -1,0 +1,6 @@
+directorParser.py:
+    - When fetching chinese from websites, strings needs to be decode first,
+      because python use unicode internally
+    - By default, json module will escape when dumping things to files.
+      Solution: set ensure_ascii=False when using json.dumps()
+
