@@ -9,8 +9,13 @@ companys = {}
 
 def outputResult(outfile):
     ofd = open(outfile, 'w')
+	c = 0
+	ofd.write("[")
     for k, comp in companys.iteritems():
-        ofd.write("%s,\n" % json.dumps(comp, ensure_ascii=False, encoding='utf-8'))
+		ofd.write(", \n") if c == 0
+        ofd.write("%s" % json.dumps(comp, ensure_ascii=False, encoding='utf-8'))
+		c += 1
+	ofd.write("]")
     ofd.close()
 
 def parseDirectors(target):
