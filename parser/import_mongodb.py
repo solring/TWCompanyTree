@@ -12,7 +12,7 @@ col_name = argv[2]
 # read import file
 with open(argv[3], "r") as fd:
 	data = json.load(fd, encoding='utf-8') # parse array into array object
-	
+
 	print 'connecting to '+argv[1]+'......'
 	client = MongoClient(url)
 	if client == None:
@@ -21,7 +21,9 @@ with open(argv[3], "r") as fd:
 
 	db = client['TWcompany']
 	collection = db[col_name]
+	print 'importing......'
 	collection.insert(data)
-
+	print 'import success.'
+	
 	client.close()
 
