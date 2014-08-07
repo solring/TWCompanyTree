@@ -1,9 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h2>This is a test.</h2>
 
+<div id="d3_container" class="container">
+
+</div>
 <p>contents</p>
+
+{% for d in data %}
+    <h2>{{d.id}}</h2> {{d.name}}, {{d.market}}<br>
+{% else %}
+    <p>route: /company/[company stock id]<p>
+{% endfor %}
 
 {% endblock %}
 

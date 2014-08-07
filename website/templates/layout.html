@@ -6,18 +6,30 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-responsive.css') }}">
 
 </head>
+<style>
 
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+</style>
 <body>
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
-            <div class="container">
                 <a class="brand" href="/">TWCT</a>
                 <ul class="nav">
                     <li><a href="/">Home</a></li>
                     <li><a href="/search">item2</a></li>
                     <li><a href="/total">item3</a></li>
                 </ul>
-            </div>
+                <form id="search-form" action="/company/search" method="post">
+                    <input id="query" type="text" class="search-query" placeholder="Search" >
+                    <input id="search-submit" type="submit" class="btn inline">
+                </form>
         </div>
     </div>
 

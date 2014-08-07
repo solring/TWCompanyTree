@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js" charset="utf-8"></script>
+<script>
+
+$('document').ready( function(){
+    var width = 960, height = 500;
+    var color = d3.scale.category20();
+
+	var build_links = function(orig){
+		var links = [];
+		for(var i=0; i<orig.length; i++){
+			links.push( {"source": orig[i].src.name, "target": orig[i].dst.name} );
+		}
+		return links;
+	};
+
+    $.getJSON("/company/"+ {{cid}} + ".json", function(data){
+		
+		$('#basicInfo').append('<p>Company</p>');
+		$('#basicInfo').append('<p>Company</p>');
+		$('#basicInfo').append('<p>Company</p>');
+		$('#basicInfo').append('<p>Company</p>');
+		$('#basicInfo').append('<p>Company</p>');
+		$('#basicInfo').append('<p>'+data.center.id + ":" + data.center.name+'</p>');
+		
+        var links_post = build_links(data.links);
+
+		var force = d3.layout.force()
+			.nodes(data.nodes)
+			.links(links_post)
+			.charge(-120)
+    		.linkDistance(30)
+			.size([width, height])
+			.start();
+	
+		var svg = d3.select("#d3-container").append("svg")
+					.attr("width", width)
+					.attr("height", height);
+		
+		var links = d3.selectAll(".link")
+					.data(data.links, key=function(l){ return l.src.name+"-"+l.dst.name });
+					
+        links.enter().append("svg:path")
+						.attr("class", "link")
+						.style("stroke", 3);
+	
+		var nodes = d3.selectAll(".node")
+					.data(data.nodes, key=function(n){ return n.name });
+	
+		nodes.enter().append("circle")
+					 .attr("class", "node")
+					 .attr("r", 10)
+					 .style("fill", function(n){ return color(n.id) })
+					 .call(force.drag);
+	
+		nodes.exit().remove();
+	
+		force.on("tick", function() {
+			links.attr("x1", function(d) { return d.source.x; })
+				.attr("y1", function(d) { return d.source.y; })
+				.attr("x2", function(d) { return d.target.x; })
+				.attr("y2", function(d) { return d.target.y; });
+	
+			nodes.attr("cx", function(d) { return d.x; })
+				.attr("cy", function(d) { return d.y; });
+		});
+	});
+});
+</script>
+
+<p>Basic Information:</p>
+<div id="basicInfo"></div>
+
+<div id="d3-container">
+</div>
+
+{% endblock %}
+
+

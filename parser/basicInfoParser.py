@@ -18,13 +18,19 @@ def outputResult(outfile):
 	ofd.write("]")
     ofd.close()
 
-def parseDirectors(target):
-    url = "http://mops.twse.com.tw/mops/web/ajax_t93sb06"
-    values = {  'encodeURIComponent': '1',
-                'step': '1',
-                'firstin': '1',
-                'off':'1',
-                'TYPEK':target }
+def parseDirectors(market_type):
+
+    # POST request and get response
+    url = "http://mops.twse.com.tw/mops/web/ajax_quickpgm"
+    otcForm = {
+		"encodeURIComponent" : "1",
+		"firstin" : "true",
+		"step" : "4",
+		"checkbtn" : "1"},
+		"queryName" : "co_id",
+		"TYPEK2" : market_type,
+		"code1" : "",
+		"keyword4" : ""}
 
     req_data = urllib.urlencode(values)
     req = urllib2.Request(url, req_data)
@@ -37,7 +43,9 @@ def parseDirectors(target):
 
     doc = pq(raw_doc.decode(encoding)) # get the DOM
     print "encoding = %s" % doc.encoding
-    table = pq(doc('table').filter('.hasBorder')) # get the table with class .hasBorder
+    
+    # customize for each website
+    table = pq(doc('table').filter('#zoom')) # get the table with class .hasBorder
     for row in table.items('tr'):
         c=1
         i=""
@@ -50,13 +58,18 @@ def parseDirectors(target):
                 if outstr not in companys:
                     companys[i] = {}
                     companys[i]["id"] = i
-                    companys[i]["directors"] = []
             elif c==2:  # company name
-                companys[i]["name"] = outstr
+                companys[i]["abbr1"] = outstr
             elif c==3:
-                companys[i]["directors"].append(outstr)
+                companys[i]["abbr2"] = outstr
             elif c==4:
-                companys[i]["type"] = outstr
+                companys[i]["name"] = outstr
+            elif c==5:
+                companys[i]["market"] = outstr
+            elif c==6:
+                companys[i]["industry"] = outstr
+            elif c==7:
+                companys[i]["note"] = outstr
             else:
                 # do nothing
                 print c
